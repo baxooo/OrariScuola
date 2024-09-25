@@ -6,35 +6,39 @@ internal static class PdfDownloader
 {
     static string _url = string.Empty;
     static DateTime _date = DateTime.Now;
-    static int _currentDayOfTheWeek = (int)_date.DayOfWeek;
-    static int _monday = 0;
 
     private static void GenerateUrl()
     {
-        if (_currentDayOfTheWeek == 6)
+        int currentDayOfTheWeek = (int)_date.DayOfWeek;
+        int monday = 0;
+
+        //if it is Sunday or Saturday, most likely the schedule has been updated so i can add 1 or 2 days,
+        //otherwise i just remove the days untill monday
+        if (currentDayOfTheWeek == 6)
         {
-            DateTime temp = _date.AddDays(1);
-            _monday = temp.Day;
+            _date = _date.AddDays(1);
+            monday = _date.Day;
         }
-        else if (_currentDayOfTheWeek == 0)
+        else if (currentDayOfTheWeek == 0)
         {
-            DateTime temp = _date.AddDays(2);
-            _monday = temp.Day;
+            _date = _date.AddDays(2);
+            monday = _date.Day;
         }
         else
         {
-            DateTime temp = _date.AddDays(-(_currentDayOfTheWeek - 1));
-            _monday = temp.Day;
+            _date = _date.AddDays(-(currentDayOfTheWeek - 1));
+            monday = _date.Day;
         }
     
         _url = "https://itisfermiserale.wordpress.com/wp-content/uploads/" + _date.Year.ToString() + "/" +
-            DateTime.Now.Month.ToString() + 
-            $"/orario_provvisorio_dal-{_monday}-{_date.ToString("MMMM", new CultureInfo("it_IT"))}_classi.pdf"; //this last part needs to be replaced sooner or later
+            DateTime.Now.Month.ToString("00") + 
+            $"/orario_provvisorio_dal-{monday}-{_date.ToString("MMMM", new CultureInfo("it_IT"))}_classi.pdf"; //this last part needs to be replaced sooner or later
     }
 
     public static void GetFile()
     {
         GenerateUrl();
+        Console.WriteLine(_url);
     }
 
 }
