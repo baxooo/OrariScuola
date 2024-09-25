@@ -4,6 +4,11 @@ internal class Program
 {
     static async Task Main(string[] args)
     {
-        await PdfDownloader.GetFile();
+        var filePath = await PdfDownloader.GetFile();
+
+        var imagPath = PdfReader.GetImageFromPdf(filePath);
+
+        /*var savedText = */ImageReader.GetTextFromImage(imagPath);
     }
+
 }
