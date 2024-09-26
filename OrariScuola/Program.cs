@@ -1,21 +1,35 @@
-﻿namespace OrariScuola;
+﻿using Ical.Net.CalendarComponents;
+using Ical.Net.Serialization;
+using System.Text;
+
+namespace OrariScuola;
 
 internal class Program
 {
     static async Task Main(string[] args)
     {
-        var filePath = await PdfDownloader.GetFile();
+        var fileInfo = await PdfDownloader.GetFileInfo();
 
-        var imagPath = PdfReader.GetImageFromPdf(filePath);
+        var pdfReader = new PdfReader();
 
-        var savedColors = ImageReader.GetColorsFromImage(imagPath);
+        var imagPath = pdfReader.GetImageFromPdf(fileInfo.Url);
+
+        var savedColors = ImageReader.GetColorsFromImage(imagPath.Result);
 
         WeekGenerator weekGenerator = new();
 
-        var days = weekGenerator.GetDaysFromColors(savedColors);
+        var days = weekGenerator.GetDaysFromColors(savedColors, fileInfo.StartDate);
 
-        foreach (var day in days) 
-            Console.WriteLine(day.ToString());
+        var weekCalendar = CalendarGenerator.GenerateCalendar(days);
+
+        var calSerializer = new CalendarSerializer();
+
+
+        string result = calSerializer.SerializeToString(weekCalendar);
+
+        File.WriteAllText(Directory.GetCurrentDirectory() + "/calendario.ics", result);
+
+        Console.WriteLine("aaa");
     }
 
 }

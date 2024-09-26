@@ -5,7 +5,7 @@ using System.Drawing.Imaging;
 
 namespace OrariScuola;
 
-internal static class PdfReader
+internal class PdfReader
 {
     /// <summary>
     /// Extracts the first image from the specified PDF file, crops it to a defined rectangle, and saves it as a JPEG file.
@@ -14,7 +14,7 @@ internal static class PdfReader
     /// <returns>
     /// The file path of the cropped image saved as a JPEG.
     /// </returns>
-    public static string GetImageFromPdf(string? path)
+    public async Task<string> GetImageFromPdf(string? path)
     {
         using PdfDocument document = PdfDocument.Open(path);
 
@@ -29,7 +29,7 @@ internal static class PdfReader
         Console.WriteLine(image);
         byte[] bitmap = CropImage([.. image.RawBytes], rectangle);
         string exportPath = Directory.GetCurrentDirectory() + $"\\image-test.jpg";
-        File.WriteAllBytes(exportPath, bitmap);
+        await File.WriteAllBytesAsync(exportPath, bitmap);
 
         return exportPath;
     }

@@ -1,11 +1,12 @@
 ﻿using System.Globalization;
+using FileInfo = OrariScuola.Models.FileInfo;
 
 namespace OrariScuola;
 //questa classe si occuperà di scaricare il pdf
 internal static class PdfDownloader
 {
     static string _url = string.Empty;
-    static DateTime _date = DateTime.Now;
+    static DateTime _date = DateTime.Now.Date;
     static string _giorno = string.Empty;
 
     private static void GenerateUrl()
@@ -40,12 +41,12 @@ internal static class PdfDownloader
 
 
     /// <summary>
-    /// Downloads a PDF file from a generated URL, saves it to the current directory, and returns the file path.
+    /// Downloads a PDF file from a generated URL, saves it to the current directory, and returns the file information.
     /// </summary>
     /// <returns>
-    /// The file path of the downloaded PDF if successful, otherwise <c>null</c> if the download fails.
+    /// A <see cref="FileInfo"/> object containing the start date and the file path of the downloaded PDF.
     /// </returns>
-    public static async Task<string?> GetFile()
+    public static async Task<FileInfo> GetFileInfo()
     {
         GenerateUrl();
 
@@ -62,7 +63,11 @@ internal static class PdfDownloader
             Console.WriteLine("File downloaded successfully");
             Console.BackgroundColor = ConsoleColor.Black;
 
-            return path;
+            TimeOnly timeSpan = new(17, 00, 00);
+            DateOnly dateOnly = new DateOnly(_date.Date.Year,_date.Date.Month,_date.Date.Day);
+            _date = new DateTime(dateOnly, timeSpan);
+
+            return new() { StartDate = _date, Url = path };
         }
         catch (Exception ex)
         {
