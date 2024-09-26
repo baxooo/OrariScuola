@@ -1,6 +1,8 @@
 ﻿using Ical.Net.CalendarComponents;
 using Ical.Net.Serialization;
+using OrariScuola.Models;
 using System.Text;
+using System.Text.Json;
 
 namespace OrariScuola;
 
@@ -24,12 +26,23 @@ internal class Program
 
         var calSerializer = new CalendarSerializer();
 
-
         string result = calSerializer.SerializeToString(weekCalendar);
 
-        File.WriteAllText(Directory.GetCurrentDirectory() + "/calendario.ics", result);
+        string pathCalendario = Directory.GetCurrentDirectory() + "/calendario.ics";
 
-        Console.WriteLine("aaa");
+        File.WriteAllText(pathCalendario, result);
+
+        string credentialsFile = await File.ReadAllTextAsync(Directory.GetCurrentDirectory() + "/appsettings.json");
+
+        Credentials credentials = JsonSerializer.Deserialize<Credentials>(credentialsFile)!; 
+
+        await EmailSender.SendEmailAsync(credentials.ToAddress!,
+                                         credentials.FromAddress!,
+                                         credentials.Password!,
+                                         "School Calendar",
+                                         "What up doe",
+                                         pathCalendario);
+
     }
 
 }

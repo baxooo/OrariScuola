@@ -28,7 +28,6 @@ internal class WeekGenerator
             }
 
             day.Hours[current] = GetHourSubject(colors[i]);
-            
         }
 
         return _days;
