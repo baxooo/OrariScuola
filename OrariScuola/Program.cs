@@ -8,7 +8,14 @@ internal class Program
 
         var imagPath = PdfReader.GetImageFromPdf(filePath);
 
-        /*var savedText = */ImageReader.GetTextFromImage(imagPath);
+        var savedColors = ImageReader.GetColorsFromImage(imagPath);
+
+        WeekGenerator weekGenerator = new();
+
+        var days = weekGenerator.GetDaysFromColors(savedColors);
+
+        foreach (var day in days) 
+            Console.WriteLine(day.ToString());
     }
 
 }

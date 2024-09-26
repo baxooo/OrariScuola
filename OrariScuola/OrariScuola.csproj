@@ -8,12 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Ical.Net" Version="4.2.0" />
     <PackageReference Include="PdfPig" Version="0.1.8" />
     <PackageReference Include="System.Drawing.Common" Version="8.0.8" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Days\" />
   </ItemGroup>
 
 </Project>

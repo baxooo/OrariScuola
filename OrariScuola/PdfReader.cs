@@ -49,10 +49,10 @@ internal static class PdfReader
 
         g.DrawImage(sourceImage!, new Rectangle(0, 0, targetImage.Width, targetImage.Height), cropRectangle, GraphicsUnit.Pixel);
 
-
         targetImage.Save(targetStream, ImageFormat.Png);
+
         return targetStream.ToArray();
 
-
     }
+
 }
