@@ -12,15 +12,11 @@ internal class Program
     {
         var fileInfo = await PdfDownloader.GetFileInfo();
 
-        var pdfReader = new PdfReader();
-
-        var imagPath = pdfReader.GetImageFromPdf(fileInfo.Url);
+        var imagPath = PdfReader.GetImageFromPdf(fileInfo.Url);
 
         var savedColors = ImageReader.GetColorsFromImage(imagPath.Result);
 
-        WeekGenerator weekGenerator = new();
-
-        var days = weekGenerator.GetDaysFromColors(savedColors, fileInfo.StartDate);
+        var days = WeekGenerator.GetDaysFromColors(savedColors, fileInfo.StartDate);
 
         var weekCalendar = CalendarGenerator.GenerateCalendar(days);
 

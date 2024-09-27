@@ -3,37 +3,35 @@ using OrariScuola.Models;
 
 namespace OrariScuola;
 
-internal class WeekGenerator
+internal static class WeekGenerator
 {
-    private List<Day> _days = [];
-    private DateTime _date;
+    private static List<Day> _days = [];
+    private static DateTime _date;
 
-    public List<Day> GetDaysFromColors(List<Color> colors, DateTime startDate)
+    public static List<Day> GetDaysFromColors(List<Color> colors, DateTime startDate)
     {
         _date = startDate;
         Day day = new();
         int current;
 
-        for (int i = 0; i <= colors.Count; i++)
+        for (int i = 0; i < colors.Count; i++)
         {
             current = i % 6;
 
-            if(current == 0 && i != 0)
+            day.Hours[current] = GetHourSubject(colors[i]);
+
+            if (current == 5)
             {
                 SetDayName(day);
                 _days.Add(day);
                 day = new();
-                if (i == 30)
-                    break;
             }
-
-            day.Hours[current] = GetHourSubject(colors[i]);
         }
 
         return _days;
     }
 
-    private void SetDayName(Day day)
+    private static void SetDayName(Day day)
     {
         switch (_days.Count)
         {
@@ -62,7 +60,7 @@ internal class WeekGenerator
         }
     }
 
-    private static string GetHourSubject(Color color)
+    private static string GetHourSubject(Color color) // to be updated
     {
         return color.Name switch
         {

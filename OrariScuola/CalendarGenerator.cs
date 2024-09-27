@@ -7,10 +7,14 @@ namespace OrariScuola;
 
 internal static class CalendarGenerator
 {
-    //as of now i can't generate it programmatically, since there aren't enough teachers to distinguish
-    //wich day is a long day and wich day is a short day, but I know that Mon and Fry are always short
-    //and the rest long
-    public static Calendar GenerateCalendar(List<Day> days)
+    /// <summary>
+    /// Generates a calendar populated with events based on the provided list of days.
+    /// For each day, a set of calendar events is created and added to the calendar.
+    /// The event generation logic varies based on the day's name.
+    /// </summary>
+    /// <param name="days">An enumerable collection of <see cref="Day"/> objects used to generate calendar events.</param>
+    /// <returns>A <see cref="Calendar"/> object containing the generated calendar events.</returns>
+    public static Calendar GenerateCalendar(IEnumerable<Day> days)
     {
         var calendar = new Calendar();
 
@@ -24,15 +28,12 @@ internal static class CalendarGenerator
                 result = GenerateCalendarEvent(day, true);
 
             foreach (var calendarEvent in result)
-            {
                 calendar.Events.Add(calendarEvent);
-            }
         }
 
         return calendar;
     }
 
-    //long = 50m/1h/1h/50m/50m 
     private static IEnumerable<CalendarEvent> GenerateCalendarEvent(Day day, bool isLongDay)
     {
         IEnumerable<CalendarEvent> events = [];
