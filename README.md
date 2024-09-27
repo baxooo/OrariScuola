@@ -14,6 +14,11 @@ Lo script esegue le seguenti operazioni:
 
 5. **Invio del calendario**: Il file viene salvato localmente e inviato via email per aggiungerlo al calendario del telefono.
 
+
+Librerie usate:
+1. iCal.Net - Per facilitare la generazione del calendario.
+2. PdfPig - Per estrarre le immagini dai pdf.
+
 ---
 
 ### ENG - Script description
@@ -31,3 +36,7 @@ This script performs the following steps:
 4. **Calendar creation**: The script generates a `.ics` file with the lesson timings.
 
 5. **Sending the calendar**: The file is saved locally and sent via email for easy import on the phone's calendar.
+
+libreries used:
+1. iCal.Net -  To easaly generate a calendar.
+2. PdfPig - To extract the images from pdf's.
