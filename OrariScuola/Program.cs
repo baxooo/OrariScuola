@@ -1,7 +1,5 @@
-﻿using Ical.Net.CalendarComponents;
-using Ical.Net.Serialization;
+﻿using Ical.Net.Serialization;
 using OrariScuola.Models;
-using System.Text;
 using System.Text.Json;
 
 namespace OrariScuola;
@@ -30,7 +28,7 @@ internal class Program
 
         string credentialsFile = await File.ReadAllTextAsync(Directory.GetCurrentDirectory() + "/appsettings.json");
 
-        Credentials credentials = JsonSerializer.Deserialize<Credentials>(credentialsFile)!; 
+        Credentials credentials = JsonSerializer.Deserialize<Credentials>(credentialsFile)!;
 
         await EmailSender.SendEmailAsync(credentials.ToAddress!,
                                          credentials.FromAddress!,

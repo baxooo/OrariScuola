@@ -10,16 +10,16 @@ internal static class ImageReader
 
     public static List<Color> GetColorsFromImage(string path)
     {
-        int x = 440, y = 100;
+        int x = 440, y = 95;
         using Bitmap bitmap = new(path);
         List<Color> colors = [];
 
-        for (int i = 0; i < 30; i++)
+        for (int i = 0; i < 25; i++)
         {
             Color pixelColor = bitmap.GetPixel(x, y);
             //bitmap.SetPixel(x, y, Color.Red); //to be commented out, here for debugging purposes
             colors.Add(pixelColor);
-            y += 31;
+            y += 38;
         }
 
         //foreach (var color in colors)

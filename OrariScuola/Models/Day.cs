@@ -5,7 +5,7 @@ internal class Day
     public string Name { get; set; } = string.Empty;
 
     public DateTime Date { get; set; }
-    public string[] Hours { get; set; } = new string[6];
+    public string[] Hours { get; set; } = new string[5];
 
     public override string ToString()
     {

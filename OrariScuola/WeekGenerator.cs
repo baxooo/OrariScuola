@@ -16,11 +16,11 @@ internal static class WeekGenerator
 
         for (int i = 0; i < colors.Count; i++)
         {
-            current = i % 6;
+            current = i % 5;
 
             day.Hours[current] = GetHourSubject(colors[i]);
 
-            if (current == 5)
+            if (current == 4)
             {
                 SetDayName(day);
                 _days.Add(day);
@@ -69,6 +69,7 @@ internal static class WeekGenerator
             "ffc1ffc0" => "Inglese",
             "ffc0e07f" => "Chimica",
             "ff00a0a0" => "Religione",
+            "ffffff80" => "Matematica",
             _ => string.Empty,
         };
     }

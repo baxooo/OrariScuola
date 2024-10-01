@@ -35,8 +35,8 @@ internal static class PdfDownloader
         _giorno = $"{monday}-{ _date.ToString("MMMM", new CultureInfo("it_IT"))}";
 
         return "https://itisfermiserale.wordpress.com/wp-content/uploads/" + _date.Year.ToString() + "/" +
-            DateTime.Now.Month.ToString("00") + 
-            $"/orario_provvisorio_dal-{monday}-{_date.ToString("MMMM", new CultureInfo("it_IT"))}_classi.pdf"; 
+            DateTime.Now.Month.ToString("00") +
+            $"/orario_provvisorio_dal-{monday}-{_date.ToString("MMMM", new CultureInfo("it_IT"))}_classi.pdf";
         //this last part needs to be replaced sooner or later
     }
 
