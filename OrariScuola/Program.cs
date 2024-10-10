@@ -9,42 +9,35 @@ internal class Program
 {
     static async Task Main(string[] args)
     {
-        Console.WriteLine("0 Same - 1 Try New");
-        var input = Console.ReadLine();
-        int choice = 0;
+        string urlFilePath = Directory.GetCurrentDirectory() + "\\url.txt";
 
-        if(!Int32.TryParse(input, out choice))
+        string url = await PdfDownloader.GetUrl();
+        
+        if(!File.Exists(urlFilePath))
+            File.Create(urlFilePath).Close();
+
+        string urlFileData = File.ReadAllText(urlFilePath);
+        string[] fileUrl = urlFileData.Split(new string[] { "\n" }, StringSplitOptions.None);
+        string pathCalendario = Directory.GetCurrentDirectory() + "\\calendario.ics";
+        DateTime monday = PdfDownloader.GetCurrentMonday();
+
+        if (!string.IsNullOrEmpty(urlFileData) && fileUrl[0] == url && fileUrl[1] == monday.ToString())
         {
-            Console.WriteLine("incorrect input, closing app");
-            Environment.Exit(0);
-        }
-
-        string pathCalendario = Directory.GetCurrentDirectory() + "/calendario.ics";
-
-        if (choice == 0)
-        {
-            if (!File.Exists(pathCalendario))
-            {
-                Console.WriteLine("Calendar File does not exist, next time press 1 to make a new one\nClosing app");
-                Environment.Exit(0);
-            }
-
-            var updatedCalendar = CalendarGenerator.UpdateCalendar(pathCalendario);
-
-            SerializeCalendar(updatedCalendar, pathCalendario);
-
+            //if the url is the same the file has already been downloaded so it's ready to be sended
+            //but it's important to check if the calendar week is the current week too
             await SendMail(pathCalendario);
-
         }
         else
         {
-            var fileInfo = await PdfDownloader.GetFileInfo();
+            File.WriteAllText(urlFilePath, url + "\n" + monday.ToString());
 
-            var imagPath = PdfReader.GetImageFromPdf(fileInfo.Url);
+            string pdfFilePath = await PdfDownloader.GetFile();
 
-            var savedColors = ImageReader.GetColorsFromImage(imagPath.Result);
+            var imagPath = await PdfReader.GetImageFromPdf(pdfFilePath);
 
-            var days = WeekGenerator.GetDaysFromColors(savedColors, fileInfo.StartDate);
+            var savedColors = ImageReader.GetColorsFromImage(imagPath);
+
+            var days = WeekGenerator.GetDaysFromColors(savedColors, monday);
 
             var weekCalendar = CalendarGenerator.GenerateCalendar(days);
 
@@ -52,6 +45,7 @@ internal class Program
 
             await SendMail(pathCalendario);
         }
+
     }
 
     private static void SerializeCalendar(Calendar calendar, string pathCalendario)

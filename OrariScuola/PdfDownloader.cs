@@ -1,62 +1,81 @@
 ﻿using System.Globalization;
-using FileInfo = OrariScuola.Models.FileInfo;
 
 namespace OrariScuola;
 //questa classe si occuperà di scaricare il pdf
 internal static class PdfDownloader
 {
-    static DateTime _date = DateTime.Now.Date;
-    static string _giorno = string.Empty;
-
-    private static string GenerateUrl()
+    private static string GetDate()
     {
-        int currentDayOfTheWeek = (int)_date.DayOfWeek;
-        int monday;
+        var date = GetCurrentMonday();
+    
+        return $"{date.Day}-{ date.ToString("MMMM", new CultureInfo("it_IT"))}";
+    }
+
+    public static DateTime GetCurrentMonday()
+    {
+        DateTime date = DateTime.Now.Date;
+        int currentDayOfTheWeek = (int)date.DayOfWeek;
 
         //if it is Sunday or Saturday, most likely the schedule has been updated so i can add 1 or 2 days,
         //otherwise i just remove the days untill monday
 
-        switch (currentDayOfTheWeek)
+        date = currentDayOfTheWeek switch
         {
-            case 6:
-                _date = _date.AddDays(1);
-                monday = _date.Day;
-                break;
-            case 0:
-                _date = _date.AddDays(2);
-                monday = _date.Day;
-                break;
-            default:
-                _date = _date.AddDays(-(currentDayOfTheWeek - 1));
-                monday = _date.Day;
-                break;
-        }
-    
-        _giorno = $"{monday}-{ _date.ToString("MMMM", new CultureInfo("it_IT"))}";
-
-        return "https://itisfermiserale.wordpress.com/wp-content/uploads/" + _date.Year.ToString() + "/" +
-            DateTime.Now.Month.ToString("00") +
-            $"/orario_provvisorio_dal-{monday}-{_date.ToString("MMMM", new CultureInfo("it_IT"))}_classi.pdf";
-        //this last part needs to be replaced sooner or later
+            6 => date.AddDays(1),
+            0 => date.AddDays(2),
+            _ => date.AddDays(-(currentDayOfTheWeek - 1)),
+        };
+        TimeOnly timeSpan = new(17, 00, 00);
+        DateOnly dateOnly = new(date.Date.Year, date.Date.Month, date.Date.Day);
+        return new DateTime(dateOnly, timeSpan);
     }
 
+    public static async Task<string> GetUrl()
+    {
+        string site = "https://itisfermiserale.wordpress.com/";
+
+        string target = "https://itisfermiserale.wordpress.com/wp-content/uploads/";
+
+        using HttpClient client = new();
+        try
+        {
+            var html = await client.GetStringAsync(site);
+            string[] list = html.Split(new string[] { "\n" },StringSplitOptions.None);
+
+            string[] urls = list.Where(s => s.Contains(target)).ToArray();
+            string url = urls.Where(s => s.Contains("orari")).First();
+
+            url = url.Remove(0, 147);
+            int index = url.IndexOf("\"");
+            url = url.Remove(index, url.Length - index);
+
+            return url;
+        }
+        catch ( Exception ex)
+        {
+            Console.BackgroundColor = ConsoleColor.Red;
+            Console.WriteLine(ex.Message);
+            Environment.Exit(0);
+            return "";
+        }
+    }
 
     /// <summary>
-    /// Downloads a PDF file from a generated URL, saves it to the current directory, and returns the file information.
+    /// Downloads a PDF file from the school, saves it to the current directory, and returns the start date of the current monday.
     /// </summary>
     /// <returns>
-    /// A <see cref="FileInfo"/> object containing the start date of the week and the file path of the downloaded PDF.
+    /// A <see cref="string"/> containing the start date of the week of the downloaded PDF school schedule.
     /// </returns>
-    public static async Task<FileInfo> GetFileInfo()
+    public static async Task<string> GetFile()
     {
-        string url = GenerateUrl();
+        string url = await GetUrl();
 
         using HttpClient client = new();
         try
         {
             byte[] fileBytes = await client.GetByteArrayAsync(url);
 
-            string path = Directory.GetCurrentDirectory() + $"\\orario-dal-{_giorno}.pdf";
+            string path = Directory.GetCurrentDirectory() + $"\\orario-dal-{GetDate()}.pdf";
 
             await File.WriteAllBytesAsync(path, fileBytes);
 
@@ -64,11 +83,7 @@ internal static class PdfDownloader
             Console.WriteLine("File downloaded successfully");
             Console.BackgroundColor = ConsoleColor.Black;
 
-            TimeOnly timeSpan = new(17, 00, 00);
-            DateOnly dateOnly = new(_date.Date.Year,_date.Date.Month,_date.Date.Day);
-            _date = new DateTime(dateOnly, timeSpan);
-
-            return new() { StartDate = _date, Url = path };
+            return path;
         }
         catch (Exception ex)
         {
@@ -79,7 +94,6 @@ internal static class PdfDownloader
             Console.WriteLine(ex.Message);
 
             Environment.Exit(0);
-
             return null;
         }
         

@@ -35,27 +35,6 @@ internal static class CalendarGenerator
         return calendar;
     }
 
-    public static Calendar UpdateCalendar(string calendarPath)
-    {
-        using StreamReader sr = new(calendarPath);
-        string content = sr.ReadToEnd();
-
-        Calendar calendar = Calendar.Load(content);
-
-        var events = calendar.Events;
-        Calendar newCal = new();
-
-        foreach(var e in events)
-        {
-            e.Start = new CalDateTime(e.Start.AddDays(7));
-
-            newCal.Events.Add(e);
-        }
-
-        return newCal;
-    }
-
-
     private static IEnumerable<CalendarEvent> GenerateCalendarEvent(Day day, bool isLongDay)
     {
         IEnumerable<CalendarEvent> events = [];
@@ -88,6 +67,5 @@ internal static class CalendarGenerator
         
         return events;
     } 
-
 
 }
