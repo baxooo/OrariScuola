@@ -3,7 +3,7 @@ using UglyToad.PdfPig;
 using System.Drawing;
 using System.Drawing.Imaging;
 
-namespace OrariScuola;
+namespace OrariScuola.Service;
 
 internal static class PdfReader
 {
@@ -27,7 +27,7 @@ internal static class PdfReader
         Rectangle rectangle = new(38, 103, 610, 1022);
 
         Console.WriteLine(image);
-        byte[] bitmap = CropImage([.. image.RawBytes], rectangle);
+        byte[] bitmap = CropImage(image.RawBytes.ToArray(), rectangle);
         string exportPath = Directory.GetCurrentDirectory() + $"\\image-test.jpg";
         await File.WriteAllBytesAsync(exportPath, bitmap);
 

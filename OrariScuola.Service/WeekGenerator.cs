@@ -1,11 +1,12 @@
 ﻿using System.Drawing;
-using OrariScuola.Models;
+using OrariScuola.Service.Models;
+using OrariScuola.Service.Enums;
 
-namespace OrariScuola;
+namespace OrariScuola.Service;
 
 internal static class WeekGenerator
 {
-    private static List<Day> _days = [];
+    private static List<Day> _days = new();
     private static DateTime _date;
 
     public static List<Day> GetDaysFromColors(List<Color> colors, DateTime startDate)
@@ -36,7 +37,7 @@ internal static class WeekGenerator
         switch (_days.Count)
         {
             case 0:
-                day.Name = DaysEnum.LUNEDI.ToString(); 
+                day.Name = DaysEnum.LUNEDI.ToString();
                 day.Date = _date;
                 break;
             case 1:
@@ -70,9 +71,12 @@ internal static class WeekGenerator
             "ffc0e07f" => "Chimica",
             "ff00a0a0" => "Religione",
             "ffffff80" => "Matematica",
+            "ff807ffe" => "Lab. fisica",
+            "ffffa0fe" => "Lab. Disegno",
             _ => string.Empty,
         };
     }
 }
+
 
 

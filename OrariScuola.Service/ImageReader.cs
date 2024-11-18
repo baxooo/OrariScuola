@@ -1,18 +1,19 @@
 ﻿using System.Drawing;
 
-namespace OrariScuola;
+namespace OrariScuola.Service;
+
 #pragma warning disable CA1416
 
 internal static class ImageReader
 {
-    // i'm not going to use any kind of image recognition, it's way simpler to achieve what i need,
-    // using the schema my school uses wich is color based. I'm also going to move that way.
+    // i'm not going to use any kind of image recognition, it's way simpler to achieve what i need by
+    // using the schema my school uses wich is color based. 
 
     public static List<Color> GetColorsFromImage(string path)
     {
         int x = 440, y = 95;
         using Bitmap bitmap = new(path);
-        List<Color> colors = [];
+        List<Color> colors = new();
 
         for (int i = 0; i < 25; i++)
         {

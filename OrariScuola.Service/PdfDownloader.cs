@@ -1,14 +1,14 @@
 ﻿using System.Globalization;
 
-namespace OrariScuola;
-//questa classe si occuperà di scaricare il pdf
+namespace OrariScuola.Service;
+
 internal static class PdfDownloader
 {
     private static string GetDate()
     {
         var date = GetCurrentMonday();
-    
-        return $"{date.Day}-{ date.ToString("MMMM", new CultureInfo("it_IT"))}";
+
+        return $"{date.Day}-{date.ToString("MMMM", new CultureInfo("it_IT"))}";
     }
 
     public static DateTime GetCurrentMonday()
@@ -27,7 +27,7 @@ internal static class PdfDownloader
         };
         TimeOnly timeSpan = new(17, 00, 00);
         DateOnly dateOnly = new(date.Date.Year, date.Date.Month, date.Date.Day);
-        return new DateTime(dateOnly, timeSpan);
+        return new DateTime(dateOnly.Year, dateOnly.Month, dateOnly.Day, timeSpan.Hour, timeSpan.Minute, timeSpan.Second);
     }
 
     public static async Task<string> GetUrl()
@@ -40,18 +40,19 @@ internal static class PdfDownloader
         try
         {
             var html = await client.GetStringAsync(site);
-            string[] list = html.Split(new string[] { "\n" },StringSplitOptions.None);
+            string[] list = html.Split(new string[] { "\n" }, StringSplitOptions.None);
 
             string[] urls = list.Where(s => s.Contains(target)).ToArray();
             string url = urls.Where(s => s.Contains("orari")).First();
 
-            url = url.Remove(0, 147);
-            int index = url.IndexOf("\"");
-            url = url.Remove(index, url.Length - index);
+            int index1 = url.IndexOf("\"https");
+            url = url.Remove(0, index1 +1);
+            int index2 = url.IndexOf("\"");
+            url = url.Remove(index2, url.Length - index2);
 
             return url;
         }
-        catch ( Exception ex)
+        catch (Exception ex)
         {
             Console.BackgroundColor = ConsoleColor.Red;
             Console.WriteLine(ex.Message);
@@ -96,7 +97,8 @@ internal static class PdfDownloader
             Environment.Exit(0);
             return null;
         }
-        
-    }
 
+    }
 }
+
+

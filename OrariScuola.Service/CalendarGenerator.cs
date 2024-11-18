@@ -1,10 +1,9 @@
 ﻿using Ical.Net;
 using Ical.Net.CalendarComponents;
 using Ical.Net.DataTypes;
-using OrariScuola.Models;
-using System.Text.Json;
+using OrariScuola.Service.Models;
 
-namespace OrariScuola;
+namespace OrariScuola.Service;
 
 internal static class CalendarGenerator
 {
@@ -23,8 +22,8 @@ internal static class CalendarGenerator
         {
             IEnumerable<CalendarEvent> result;
 
-            if(day.Name == "LUNEDI"|| day.Name == "VENERDI")
-                result = GenerateCalendarEvent(day, false); 
+            if (day.Name == "LUNEDI" || day.Name == "VENERDI")
+                result = GenerateCalendarEvent(day, false);
             else
                 result = GenerateCalendarEvent(day, true);
 
@@ -37,7 +36,7 @@ internal static class CalendarGenerator
 
     private static IEnumerable<CalendarEvent> GenerateCalendarEvent(Day day, bool isLongDay)
     {
-        IEnumerable<CalendarEvent> events = [];
+        IEnumerable<CalendarEvent> events = new List<CalendarEvent>();
         CalendarEvent calendarEvent;
 
         for (int i = 0; i < day.Hours.Length; i++)
@@ -64,8 +63,8 @@ internal static class CalendarGenerator
 
             events = events.Append(calendarEvent);
         }
-        
+
         return events;
-    } 
+    }
 
 }
