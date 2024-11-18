@@ -1,6 +1,6 @@
 ### ITA - Descrizione dello script
 
-## Aggiungi gli orari delle lezioni della mia scuoola al calendario del telefono 📅
+## Aggiungi gli orari delle lezioni della mia scuola al calendario del telefono 📅
 
 Lo script esegue le seguenti operazioni:
 
