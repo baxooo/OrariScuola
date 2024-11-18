@@ -362,3 +362,13 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /OrariScuola/appsettings.json
+/OrariScuola.API/appsettings.json
+/OrariScuola.API/urlInfo.txt
+/OrariScuola.API/appsettings.Development.json
+
+*.json
+*.txt
+*.ics
+*.jpg
+*.pdf
+/OrariScuola.API/orario-dal-18-novembre.pdf
