@@ -1,6 +1,6 @@
 ### ITA - Descrizione dello script
 
-## Aggiungi gli orari delle lezioni al calendario del telefono 📅
+## Aggiungi gli orari delle lezioni della mia scuola al calendario del telefono 📅
 
 Lo script esegue le seguenti operazioni:
 
@@ -23,7 +23,7 @@ Librerie usate:
 
 ### ENG - Script description
 
-## Add lesson schedules to your phone calendar 📅
+## Adds my schools lessons schedules to phone calendar 📅
 
 This script performs the following steps:
 
