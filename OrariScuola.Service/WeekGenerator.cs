@@ -6,7 +6,7 @@ namespace OrariScuola.Service;
 
 internal static class WeekGenerator
 {
-    private static List<Day> _days = new();
+    private readonly static List<Day> _days = [];
     private static DateTime _date;
 
     public static List<Day> GetDaysFromColors(List<Color> colors, DateTime startDate)
@@ -73,6 +73,9 @@ internal static class WeekGenerator
             "ffffff80" => "Matematica",
             "ff807ffe" => "Lab. fisica",
             "ffffa0fe" => "Lab. Disegno",
+            "fffec1c0" => "Disegno",
+            "ffc0c000" => "Fisica",
+            "ffffc080" => "Lab. Chimica",
             _ => string.Empty,
         };
     }
