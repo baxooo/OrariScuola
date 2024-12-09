@@ -62,7 +62,7 @@ internal static class PdfDownloader
     }
 
     /// <summary>
-    /// Downloads a PDF file from the school, saves it to the current directory, and returns the start date of the current monday.
+    /// Downloads a PDF file from the school site, saves it to the current directory, and returns the start date of the current monday.
     /// </summary>
     /// <returns>
     /// A <see cref="string"/> containing the start date of the week of the downloaded PDF school schedule.
@@ -97,7 +97,6 @@ internal static class PdfDownloader
             Environment.Exit(0);
             return null;
         }
-
     }
 }
 

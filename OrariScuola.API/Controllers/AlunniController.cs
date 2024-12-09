@@ -12,16 +12,9 @@ namespace OrariScuola.API.Controllers
     public class AlunniController : Controller
     {
         [HttpGet]
-        public async Task<FileContentResult> GetCalendar([FromQuery]SectionsEnum section)
+        public async Task<FileContentResult> GetCalendar([FromQuery]SectionsEnum section, string? mail)
         {
-            //TODO - ShouldUpdate() method returns a bool, so:
-            // if(Class.ShouldUpdate())
-            // {
-            //     await GenerateNewCalendars.Generate()
-            // }
-            // this way, if we have files to update we update them and then have them ready to go
-
-            var result = await GenerateNewCalendars.Generate(true, section);
+            var result = await GenerateNewCalendars.Generate(mail, section);
 
             var file = await System.IO.File.ReadAllBytesAsync(result);
 

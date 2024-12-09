@@ -11,6 +11,7 @@ internal static class WeekGenerator
 
     public static List<Day> GetDaysFromColors(List<Color> colors, DateTime startDate)
     {
+        _days.Clear();
         _date = startDate;
         Day day = new();
         int current;

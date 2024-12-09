@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using OrariScuola.Service.Enums;
+using System.Drawing;
 
 namespace OrariScuola.Service;
 
@@ -6,12 +7,9 @@ namespace OrariScuola.Service;
 
 internal static class ImageReader
 {
-    // i'm not going to use any kind of image recognition, it's way simpler to achieve what i need by
-    // using the schema my school uses wich is color based. 
-
     public static List<Color> GetColorsFromImage(string path)
     {
-        int x = 440, y = 95;
+        int x = 20, y = 20;
         using Bitmap bitmap = new(path);
         List<Color> colors = new();
 
@@ -32,5 +30,4 @@ internal static class ImageReader
 
         return colors;
     }
-
 }
