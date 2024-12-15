@@ -30,7 +30,7 @@ internal static class PdfDownloader
         return new DateTime(dateOnly.Year, dateOnly.Month, dateOnly.Day, timeSpan.Hour, timeSpan.Minute, timeSpan.Second);
     }
 
-    public static async Task<string> GetUrl()
+    private static async Task<string> GetUrl(bool isStudent)
     {
         string site = "https://itisfermiserale.wordpress.com/";
 
@@ -43,10 +43,15 @@ internal static class PdfDownloader
             string[] list = html.Split(new string[] { "\n" }, StringSplitOptions.None);
 
             string[] urls = list.Where(s => s.Contains(target)).ToArray();
-            string url = urls.Where(s => s.Contains("orari")).First();
+            string url = "";
+
+            if(isStudent)
+                url = urls.Where(s => s.Contains("orari")).First();
+            else url = urls.Where(s => s.Contains("docenti")).First();
+
 
             int index1 = url.IndexOf("\"https");
-            url = url.Remove(0, index1 +1);
+            url = url.Remove(0, index1 + 1);
             int index2 = url.IndexOf("\"");
             url = url.Remove(index2, url.Length - index2);
 
@@ -61,22 +66,27 @@ internal static class PdfDownloader
         }
     }
 
+
     /// <summary>
     /// Downloads a PDF file from the school site, saves it to the current directory, and returns the start date of the current monday.
     /// </summary>
     /// <returns>
-    /// A <see cref="string"/> containing the start date of the week of the downloaded PDF school schedule.
+    /// A <see cref="string"/> containing the path directory of the downloaded PDF school schedule.
     /// </returns>
-    public static async Task<string> GetFile()
+    public static async Task<string> GetFile(bool isStudent)
     {
-        string url = await GetUrl();
+        string url = await GetUrl(isStudent);
 
         using HttpClient client = new();
         try
         {
             byte[] fileBytes = await client.GetByteArrayAsync(url);
 
-            string path = Directory.GetCurrentDirectory() + $"\\orario-dal-{GetDate()}.pdf";
+            string path = Directory.GetCurrentDirectory() + $"\\orario-dal-{GetDate()}-";
+            if (isStudent) 
+                path += "alunni.pdf";
+            else 
+                path += "docenti.pdf";
 
             await File.WriteAllBytesAsync(path, fileBytes);
 

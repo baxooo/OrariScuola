@@ -3,12 +3,15 @@ using Ical.Net.Serialization;
 using OrariScuola.Service.Enums;
 using OrariScuola.Service.Models;
 using System.Text.Json;
+using static System.Collections.Specialized.BitVector32;
 
 namespace OrariScuola.Service;
 
 public static class GenerateNewCalendars
 {
     private static readonly string _urlInfoFilePath = Directory.GetCurrentDirectory() + "\\urlInfo.txt";
+    private static readonly string _urlProfInfoFilePath = Directory.GetCurrentDirectory() + "\\profUrlInfo.txt";
+    private static readonly string[] _separator = ["\n"];
 
     /// <summary>
     /// Generates a new calendar.
@@ -16,39 +19,59 @@ public static class GenerateNewCalendars
     /// <param name="mail"></param>
     /// <param name="section"></param>
     /// <returns>A string rappresenting the calendar file path.</returns>
-    public static async Task<string> Generate(string? mail, SectionsEnum section)
+    public static async Task<string> GenerateStudent(string? mail, SectionsEnum section)
     {
-        string pathCalendario = Directory.GetCurrentDirectory() + "\\calendario" + "_" + section.ToString() + ".ics";
-
-        string url = await PdfDownloader.GetUrl();
-
-        if (!File.Exists(_urlInfoFilePath))
-            File.Create(_urlInfoFilePath).Close();
-
-        string urlFileData = File.ReadAllText(_urlInfoFilePath);
-        string[] fileUrl = urlFileData.Split(new string[] { "\n" }, StringSplitOptions.None);
         DateTime monday = PdfDownloader.GetCurrentMonday();
 
-        if (!string.IsNullOrEmpty(urlFileData) && 
-            fileUrl[0] == url && 
-            fileUrl[1] == monday.ToString() && 
-            fileUrl.Contains(section.ToString())&&
-            File.Exists(pathCalendario))
+        string pathCalendario = Directory.GetCurrentDirectory() + "\\calendario" + "_" + section.ToString() ;
+        pathCalendario += "_" + monday + ".ics";
+
+        if (File.Exists(pathCalendario))
         {
-            //if the url is the same the file has already been downloaded so it's ready to be sended
-            //but it's important to check if the calendar week is the current week too,
-            //and lastly check if a calendar for that section has been already generated
+            //if the the file for the section with date exist, there's no need to do any more operation and it is possible to send it
             if (!string.IsNullOrEmpty(mail))
                 await SendMail(pathCalendario, mail);
 
             return pathCalendario;
         }
 
-        File.WriteAllText(_urlInfoFilePath, url + "\n" + monday.ToString());
-
-        string pdfFilePath = await PdfDownloader.GetFile();
+        string pdfFilePath = await PdfDownloader.GetFile(true);
 
         var imagPath = await PdfReader.GetImageFromPdf(pdfFilePath, section);
+
+        var savedColors = ImageReader.GetColorsFromImage(imagPath);
+
+        var days = WeekGenerator.GetDaysFromColors(savedColors, monday);
+
+        var weekCalendar = CalendarGenerator.GenerateCalendar(days);
+
+        SerializeCalendar(weekCalendar, pathCalendario);
+
+        if (!string.IsNullOrEmpty(mail))
+            await SendMail(pathCalendario, mail);
+
+        return pathCalendario;
+    }
+
+    public static async Task<string> GenerateProfessor(string? mail, ProfessorsEnum prof)
+    {
+        DateTime monday = PdfDownloader.GetCurrentMonday();
+
+        string pathCalendario = Directory.GetCurrentDirectory() + "\\calendario" + "_" + prof.ToString();
+        pathCalendario += "_" + monday + ".ics";
+
+        if (File.Exists(pathCalendario))
+        {
+            //if the the file for the section with date exist, there's no need to do any more operation and it is possible to send it
+            if (!string.IsNullOrEmpty(mail))
+                await SendMail(pathCalendario, mail);
+
+            return pathCalendario;
+        }
+
+        string pdfFilePath = await PdfDownloader.GetFile(true);
+
+        var imagPath = await PdfReader.GetImageFromStudentPdf(pdfFilePath, prof);
 
         var savedColors = ImageReader.GetColorsFromImage(imagPath);
 

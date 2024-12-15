@@ -9,7 +9,7 @@ namespace OrariScuola.Service;
 internal static class PdfReader
 {
     /// <summary>
-    /// Extracts the first image from the specified PDF file, crops it to a defined rectangle, and saves it as a JPEG file.
+    /// Extracts the image from the specified PDF file,based on the section, crops it to a defined rectangle, and saves it as a JPEG file.
     /// </summary>
     /// <param name="path">The file path of the PDF from which to extract the image.</param>
     /// <returns>
@@ -32,7 +32,7 @@ internal static class PdfReader
 
         //206px
 
-        Rectangle rectangle = new(444 + SectionAdjustment(section), 182, 40, 947);
+        Rectangle rectangle = new(444 + StudentSectionAdjustment(section), 182, 40, 947);
 
         Console.WriteLine(image);
         byte[] bitmap = CropImage(image.RawBytes.ToArray(), rectangle);
@@ -42,7 +42,41 @@ internal static class PdfReader
         return exportPath;
     }
 
-    private static int SectionAdjustment(SectionsEnum section)
+    /// <summary>
+    /// Extracts the image from the specified PDF file,based on the section, crops it to a defined rectangle, and saves it as a JPEG file.
+    /// </summary>
+    /// <param name="path">The file path of the PDF from which to extract the image.</param>
+    /// <returns>
+    /// The file path of the cropped image saved as a JPEG.
+    /// </returns>
+    public static async Task<string> GetImageFromPdf(string? path, ProfessorsEnum prof)
+    {
+        using PdfDocument document = PdfDocument.Open(path);
+
+        Page page;
+
+        if (IsFirstPageSection(prof))
+            page = document.GetPage(1);
+        else page = document.GetPage(2);
+
+
+        List<IPdfImage> images = page.GetImages().ToList();
+
+        IPdfImage image = images[0];
+
+        //206px
+
+        Rectangle rectangle = new(444 + StudentSectionAdjustment(prof), 182, 40, 947);
+
+        Console.WriteLine(image);
+        byte[] bitmap = CropImage(image.RawBytes.ToArray(), rectangle);
+        string exportPath = Directory.GetCurrentDirectory() + $"\\image-test.jpg";
+        await File.WriteAllBytesAsync(exportPath, bitmap);
+
+        return exportPath;
+    }
+
+    private static int StudentSectionAdjustment(SectionsEnum section)
     {
         if (IsFirstPageSection(section))
             return 206 * (int)section;
@@ -59,6 +93,14 @@ internal static class PdfReader
             SectionsEnum.N3 or
             SectionsEnum.O3 or
             SectionsEnum.A4 => true,
+            _ => false
+        };
+    }
+    private static bool IsFirstPageSection(ProfessorsEnum prof)
+    {
+        return prof switch
+        {
+            => true,
             _ => false
         };
     }

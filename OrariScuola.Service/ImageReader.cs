@@ -1,17 +1,15 @@
-﻿using OrariScuola.Service.Enums;
-using System.Drawing;
+﻿using System.Drawing;
 
 namespace OrariScuola.Service;
 
 #pragma warning disable CA1416
-
 internal static class ImageReader
 {
     public static List<Color> GetColorsFromImage(string path)
     {
         int x = 20, y = 20;
         using Bitmap bitmap = new(path);
-        List<Color> colors = new();
+        List<Color> colors = [];
 
         for (int i = 0; i < 25; i++)
         {
