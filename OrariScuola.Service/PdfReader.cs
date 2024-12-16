@@ -35,7 +35,7 @@ internal static class PdfReader
         Rectangle rectangle = new(444 + StudentSectionAdjustment(section), 182, 40, 947);
 
         Console.WriteLine(image);
-        byte[] bitmap = CropImage(image.RawBytes.ToArray(), rectangle);
+        byte[] bitmap = ImageReader.CropImage(image.RawBytes.ToArray(), rectangle);
         string exportPath = Directory.GetCurrentDirectory() + $"\\image-test.jpg";
         await File.WriteAllBytesAsync(exportPath, bitmap);
 
@@ -64,12 +64,12 @@ internal static class PdfReader
 
         IPdfImage image = images[0];
 
-        //206px
+        //await File.WriteAllBytesAsync(Directory.GetCurrentDirectory()+ "\\docenti.jpg", [.. image.RawBytes]);
 
-        Rectangle rectangle = new(444 + StudentSectionAdjustment(prof), 182, 40, 947);
+        Rectangle rectangle = new(177, ProfessorSectionAdjustment(prof) + 231, 1474, 64); 
 
         Console.WriteLine(image);
-        byte[] bitmap = CropImage(image.RawBytes.ToArray(), rectangle);
+        byte[] bitmap = ImageReader.CropImage(image.RawBytes.ToArray(), rectangle);
         string exportPath = Directory.GetCurrentDirectory() + $"\\image-test.jpg";
         await File.WriteAllBytesAsync(exportPath, bitmap);
 
@@ -81,6 +81,12 @@ internal static class PdfReader
         if (IsFirstPageSection(section))
             return 206 * (int)section;
         else return 206 * ((int)section - 6);
+    }
+    private static int ProfessorSectionAdjustment(ProfessorsEnum prof)
+    {
+        if (IsFirstPageSection(prof))
+            return 64 * (int)prof;
+        else return 64 * ((int)prof - 6);
     }
 
     private static bool IsFirstPageSection(SectionsEnum section)
@@ -100,29 +106,9 @@ internal static class PdfReader
     {
         return prof switch
         {
-            => true,
+           ProfessorsEnum.ANNUNZIATA => true,
             _ => false
         };
-    }
-
-    private static byte[] CropImage(byte[] image, Rectangle cropRectangle)
-    {
-        using MemoryStream sourceStream = new(image);
-
-#pragma warning disable CA1416
-        Bitmap? sourceImage = Image.FromStream(sourceStream) as Bitmap;
-
-        using MemoryStream targetStream = new();
-
-        using var targetImage = new Bitmap(cropRectangle.Width, cropRectangle.Height);
-
-        using Graphics g = Graphics.FromImage(targetImage);
-
-        g.DrawImage(sourceImage!, new Rectangle(0, 0, targetImage.Width, targetImage.Height), cropRectangle, GraphicsUnit.Pixel);
-
-        targetImage.Save(targetStream, ImageFormat.Png);
-
-        return targetStream.ToArray();
     }
 
 }

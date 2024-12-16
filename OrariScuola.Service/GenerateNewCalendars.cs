@@ -41,7 +41,7 @@ public static class GenerateNewCalendars
 
         var savedColors = ImageReader.GetColorsFromImage(imagPath);
 
-        var days = WeekGenerator.GetDaysFromColors(savedColors, monday);
+        var days = WeekGenerator.GetDays(savedColors, monday);
 
         var weekCalendar = CalendarGenerator.GenerateCalendar(days);
 
@@ -58,7 +58,7 @@ public static class GenerateNewCalendars
         DateTime monday = PdfDownloader.GetCurrentMonday();
 
         string pathCalendario = Directory.GetCurrentDirectory() + "\\calendario" + "_" + prof.ToString();
-        pathCalendario += "_" + monday + ".ics";
+        pathCalendario += "_" + monday.ToString("dd-MMMM") + ".ics";
 
         if (File.Exists(pathCalendario))
         {
@@ -69,13 +69,13 @@ public static class GenerateNewCalendars
             return pathCalendario;
         }
 
-        string pdfFilePath = await PdfDownloader.GetFile(true);
+        string pdfFilePath = await PdfDownloader.GetFile(false);
 
-        var imagPath = await PdfReader.GetImageFromStudentPdf(pdfFilePath, prof);
+        var imagPath = await PdfReader.GetImageFromPdf(pdfFilePath, prof);
 
-        var savedColors = ImageReader.GetColorsFromImage(imagPath);
+        var savedColors = ImageReader.ReadSectionsFromImage(imagPath);
 
-        var days = WeekGenerator.GetDaysFromColors(savedColors, monday);
+        var days = WeekGenerator.GetDays(savedColors, monday);
 
         var weekCalendar = CalendarGenerator.GenerateCalendar(days);
 

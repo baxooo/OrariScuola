@@ -21,8 +21,8 @@ internal static class PdfDownloader
 
         date = currentDayOfTheWeek switch
         {
-            6 => date.AddDays(1),
-            0 => date.AddDays(2),
+            6 => date.AddDays(2),
+            0 => date.AddDays(1),
             _ => date.AddDays(-(currentDayOfTheWeek - 1)),
         };
         TimeOnly timeSpan = new(17, 00, 00);

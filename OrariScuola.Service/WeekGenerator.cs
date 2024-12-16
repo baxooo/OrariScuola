@@ -9,7 +9,7 @@ internal static class WeekGenerator
     private readonly static List<Day> _days = [];
     private static DateTime _date;
 
-    public static List<Day> GetDaysFromColors(List<Color> colors, DateTime startDate)
+    public static List<Day> GetDays(List<Color> colors, DateTime startDate)
     {
         _days.Clear();
         _date = startDate;
@@ -21,6 +21,29 @@ internal static class WeekGenerator
             current = i % 5;
 
             day.Hours[current] = GetHourSubject(colors[i]);
+
+            if (current == 4)
+            {
+                SetDayName(day);
+                _days.Add(day);
+                day = new();
+            }
+        }
+
+        return _days;
+    }
+    public static List<Day> GetDays(List<string> sections, DateTime startDate)
+    {
+        _days.Clear();
+        _date = startDate;
+        Day day = new();
+        int current;
+
+        for (int i = 0; i < sections.Count; i++)
+        {
+            current = i % 5;
+
+            day.Hours[current] = sections[i];
 
             if (current == 4)
             {
