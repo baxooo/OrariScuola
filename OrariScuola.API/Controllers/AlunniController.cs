@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using OrariScuola.Service;
 using OrariScuola.Service.Enums;
 
@@ -9,16 +10,16 @@ namespace OrariScuola.API.Controllers
     public class AlunniController : Controller
     {
         [HttpGet]
-        public async Task<ActionResult<FileContentResult>> GetCalendar([FromQuery]SectionsEnum section, string? mail)
+        public async Task<FileContentResult> GetCalendar([FromQuery]SectionsEnum section, string? mail)
         {
             var result = await GenerateNewCalendars.GenerateStudent(mail, section);
 
-            if (string.IsNullOrEmpty(result))
-                return BadRequest("File Not Found");
+            //if (string.IsNullOrEmpty(result))
+            //    return BadRequest("File Not Found");
             
             var file = await System.IO.File.ReadAllBytesAsync(result);
 
-            return Ok(File(file, "text/calendar", result.Replace(Directory.GetCurrentDirectory(), "")));
+            return File(file, "text/calendar", result.Replace(Directory.GetCurrentDirectory(), ""));
         }
     }
 }

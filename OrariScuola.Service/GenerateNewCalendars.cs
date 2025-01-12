@@ -24,7 +24,7 @@ public static class GenerateNewCalendars
         DateTime monday = PdfDownloader.GetCurrentMonday();
 
         string pathCalendario = Directory.GetCurrentDirectory() + "\\calendario" + "_" + section.ToString() ;
-        pathCalendario += "_" + monday + ".ics";
+        pathCalendario += "_" + monday.ToString("dd-MMMM") + ".ics";
 
         if (File.Exists(pathCalendario))
         {
