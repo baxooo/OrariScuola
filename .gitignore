@@ -373,3 +373,8 @@ FodyWeavers.xsd
 *.pdf
 /OrariScuola.API/image-test.jpg.png
 /OrariScuola/.idea
+/.idea/.idea.OrariScuola/.idea/.gitignore
+/.idea/.idea.OrariScuola/.idea/encodings.xml
+/.idea/.idea.OrariScuola/.idea/indexLayout.xml
+/.idea/config/applicationhost.config
+/.idea/.idea.OrariScuola/.idea/vcs.xml
