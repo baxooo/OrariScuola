@@ -18,6 +18,7 @@ Lo script esegue le seguenti operazioni:
 Librerie usate:
 1. iCal.Net - Per facilitare la generazione del calendario.
 2. PdfPig - Per estrarre le immagini dai pdf.
+3. Tesseract -  OCR per poter leggere i caratteri delle sezioni.
 
 ---
 
@@ -40,3 +41,4 @@ This script performs the following steps:
 libreries used:
 1. iCal.Net -  To easaly generate a calendar.
 2. PdfPig - To extract the images from pdf's.
+3. TESSERACT - OCR to extract section code. 
