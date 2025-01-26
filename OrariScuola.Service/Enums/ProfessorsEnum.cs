@@ -24,7 +24,7 @@ public enum ProfessorsEnum
     PALLOTTI,
     PECCERILLO,
     PEDULLA,
-    PEMERIDIANO,
+    POMERIDIANO,
     PROSPERO,
     RAUCCI,
     SCALABRINI,

@@ -11,15 +11,15 @@ namespace OrariScuola.API.Controllers;
 public class DocentiController : Controller
 {
     [HttpGet]
-    public async Task<ActionResult<FileContentResult>> GetCalendar([FromQuery]ProfessorsEnum prof, string? mail)
+    public async Task<FileContentResult> GetCalendar([FromQuery]ProfessorsEnum prof, string? mail)
     {
         var result = await GenerateNewCalendars.GenerateProfessor(mail, prof);
 
-        if (string.IsNullOrEmpty(result))
-            return BadRequest("File Not Found");
+        //if (string.IsNullOrEmpty(result))
+        //    return BadRequest("File Not Found");
 
         var file = await System.IO.File.ReadAllBytesAsync(result);
 
-        return Ok(File(file, "text/calendar", result.Replace(Directory.GetCurrentDirectory(), "")));
+        return File(file, "text/calendar", result.Replace(Directory.GetCurrentDirectory(), ""));
     }
 }

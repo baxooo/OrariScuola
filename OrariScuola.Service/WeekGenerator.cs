@@ -41,9 +41,11 @@ internal static class WeekGenerator
 
         for (int i = 0; i < sections.Count; i++)
         {
+            Console.WriteLine(sections[i]);
+             
             current = i % 5;
 
-            day.Hours[current] = sections[i];
+            day.Hours[current] = sections[i] == "\n" ? string.Empty : sections[i];
 
             if (current == 4)
             {

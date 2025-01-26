@@ -23,12 +23,12 @@ public static class GenerateNewCalendars
     {
         DateTime monday = PdfDownloader.GetCurrentMonday();
 
-        string pathCalendario = Directory.GetCurrentDirectory() + "\\calendario" + "_" + section.ToString() ;
+        string pathCalendario = Directory.GetCurrentDirectory() + "\\calendario" + "_" + section.ToString();
         pathCalendario += "_" + monday.ToString("dd-MMMM") + ".ics";
 
         if (File.Exists(pathCalendario))
         {
-            //if the the file for the section with date exist, there's no need to do any more operation and it is possible to send it
+            //if the file for the section with date exist, there's no need to do any more operation, and it is possible to send it
             if (!string.IsNullOrEmpty(mail))
                 await SendMail(pathCalendario, mail);
 
@@ -62,7 +62,7 @@ public static class GenerateNewCalendars
 
         if (File.Exists(pathCalendario))
         {
-            //if the the file for the section with date exist, there's no need to do any more operation and it is possible to send it
+            //if the file for the section with date exist, there's no need to do any more operation and it is possible to send it
             if (!string.IsNullOrEmpty(mail))
                 await SendMail(pathCalendario, mail);
 
@@ -73,9 +73,9 @@ public static class GenerateNewCalendars
 
         var imagPath = await PdfReader.GetImageFromPdf(pdfFilePath, prof);
 
-        var savedColors = ImageReader.ReadSectionsFromImage(imagPath);
+        var savedSections = ImageReader.ReadSectionsFromImage(imagPath);
 
-        var days = WeekGenerator.GetDays(savedColors, monday);
+        var days = WeekGenerator.GetDays(savedSections, monday);
 
         var weekCalendar = CalendarGenerator.GenerateCalendar(days);
 

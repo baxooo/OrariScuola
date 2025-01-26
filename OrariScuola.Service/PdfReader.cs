@@ -80,13 +80,13 @@ internal static class PdfReader
     {
         if (IsFirstPageSection(section))
             return 206 * (int)section;
-        else return 206 * ((int)section - 6);
+        return 206 * ((int)section - 6);
     }
     private static int ProfessorSectionAdjustment(ProfessorsEnum prof)
     {
         if (IsFirstPageSection(prof))
             return 64 * (int)prof;
-        else return 64 * ((int)prof - 6);
+        return 64 * ((int)prof - 14);
     }
 
     private static bool IsFirstPageSection(SectionsEnum section)
@@ -106,7 +106,20 @@ internal static class PdfReader
     {
         return prof switch
         {
-           ProfessorsEnum.ANNUNZIATA => true,
+           ProfessorsEnum.ANNUNZIATA or
+           ProfessorsEnum.ATTENNI or
+           ProfessorsEnum.BOSSI or
+           ProfessorsEnum.CAIATI or
+           ProfessorsEnum.CAPOBIANCO or
+           ProfessorsEnum.CHIODO or
+           ProfessorsEnum.CONDINO or
+           ProfessorsEnum.CONTI or
+           ProfessorsEnum.DORSI or
+           ProfessorsEnum.FANTI or
+           ProfessorsEnum.FRANGELLA or
+           ProfessorsEnum.GALEANO or
+           ProfessorsEnum.LASPISA or
+           ProfessorsEnum.LIGUORI => true,
             _ => false
         };
     }

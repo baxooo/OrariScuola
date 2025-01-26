@@ -42,7 +42,12 @@ internal static class CalendarGenerator
         for (int i = 0; i < day.Hours.Length; i++)
         {
             if (day.Hours[i] == string.Empty)
+            {
+                if (!isLongDay || i == 1 || i == 2)
+                    day.Date = day.Date.AddMinutes(60);
+                else day.Date = day.Date.AddMinutes(50);
                 continue;
+            }
             calendarEvent = new()
             {
                 Summary = day.Hours[i],
@@ -51,15 +56,10 @@ internal static class CalendarGenerator
             };
 
             if (!isLongDay || i == 1 || i == 2)
-            {
                 day.Date = day.Date.AddMinutes(60);
-                calendarEvent.End = new CalDateTime(day.Date);
-            }
-            else
-            {
-                day.Date = day.Date.AddMinutes(50);
-                calendarEvent.End = new CalDateTime(day.Date);
-            }
+            else day.Date = day.Date.AddMinutes(50);
+                
+            calendarEvent.End = new CalDateTime(day.Date);
 
             events = events.Append(calendarEvent);
         }
