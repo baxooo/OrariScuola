@@ -372,3 +372,4 @@ FodyWeavers.xsd
 *.jpg
 *.pdf
 /OrariScuola.API/image-test.jpg.png
+/OrariScuola/.idea
