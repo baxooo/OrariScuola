@@ -30,8 +30,6 @@ internal static class PdfReader
 
         IPdfImage image = images[0];
 
-        //206px
-
         Rectangle rectangle = new(444 + StudentSectionAdjustment(section), 182, 40, 947);
 
         Console.WriteLine(image);
